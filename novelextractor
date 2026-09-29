@@ -1,0 +1,48 @@
+(() => {
+    // Hanapin ang chapter content
+    const containers = document.querySelectorAll('.cha-words');
+
+    if (!containers.length) {
+        console.log("Walang .cha-words na nakita.");
+        return;
+    }
+
+    let text = "";
+
+    containers.forEach(container => {
+        const paragraphs = container.querySelectorAll("p");
+
+        if (paragraphs.length) {
+            paragraphs.forEach(p => {
+                const line = p.innerText.trim();
+                if (line) text += line + "\n";
+            });
+        } else {
+            text += container.innerText.trim() + "\n";
+        }
+    });
+
+    text = text.trim();
+
+    console.log("Extracted characters:", text.length);
+    console.log(text);
+
+    // Download current chapter as TXT
+    const blob = new Blob([text], {
+        type: "text/plain;charset=utf-8"
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "chapter.txt";
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+
+    console.log("Chapter extracted successfully.");
+})();
